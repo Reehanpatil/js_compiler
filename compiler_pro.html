@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pro JS Compiler</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      body {
+        background: #0f172a;
+      }
+
+      .lines {
+        text-align: right;
+        padding-right: 8px;
+        color: #64748b;
+        user-select: none;
+        overflow: hidden;
+        min-width: 40px;
+      }
+
+      textarea {
+        line-height: 1.5;
+        overflow: auto;
+      }
+    </style>
+  </head>
+
+  <body class="text-white">
+    <header class="bg-slate-800 p-4 text-center text-xl font-bold shadow">
+      🚀 Pro JS Compiler
+    </header>
+
+    <!-- RUN BUTTON -->
+    <div class="flex justify-center mt-6">
+      <button
+        onclick="runCode()"
+        class="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl font-bold shadow-lg"
+      >
+        ▶ Run Code
+      </button>
+    </div>
+
+    <!-- MAIN -->
+    <div class="mx-[5rem] mt-6 flex flex-col md:flex-row gap-6">
+      <!-- LEFT PANEL -->
+      <div
+        class="w-full md:w-1/2 border border-slate-700 rounded-xl shadow-lg bg-slate-900"
+      >
+        <div class="flex h-[60vh] overflow-hidden">
+          <!-- LINE NUMBERS -->
+          <div
+            id="lines"
+            class="lines bg-slate-800 p-2 text-sm rounded-l-xl"
+          ></div>
+
+          <!-- TEXTAREA -->
+          <textarea
+            id="code"
+            class="w-full p-3 bg-transparent outline-none text-sm font-mono"
+          >
+// Try this
+console.log("Hello Reehan 🚀");
+</textarea
+          >
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div
+        class="w-full md:w-1/2 border border-slate-700 rounded-xl shadow-lg bg-slate-900 p-3"
+      >
+        <h3 class="text-green-400 mb-3 font-semibold">Output</h3>
+
+        <pre
+          id="output"
+          class="bg-black p-3 rounded-lg h-[60vh] overflow-auto"
+        ></pre>
+      </div>
+    </div>
+
+    <script>
+      const code = document.getElementById("code");
+      const lines = document.getElementById("lines");
+
+      function updateLines() {
+        let count = code.value.split("\n").length;
+        let nums = "";
+        for (let i = 1; i <= count; i++) {
+          nums += i + "<br>";
+        }
+        lines.innerHTML = nums;
+      }
+
+      // update on typing
+      code.addEventListener("input", updateLines);
+
+      // sync scroll
+      code.addEventListener("scroll", () => {
+        lines.scrollTop = code.scrollTop;
+      });
+
+      // initial load
+      updateLines();
+
+      function runCode() {
+        const output = document.getElementById("output");
+        output.textContent = "";
+
+        const originalLog = console.log;
+
+        console.log = function (...args) {
+          output.textContent += args.join(" ") + "\n";
+        };
+
+        try {
+          eval(code.value);
+        } catch (err) {
+          output.textContent = "Error: " + err.message;
+        }
+
+        console.log = originalLog;
+      }
+    </script>
+  </body>
+</html>
